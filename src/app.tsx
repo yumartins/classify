@@ -3,10 +3,13 @@ import "./styles/main.scss"
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm } from "react-hook-form"
+import toast, { Toaster } from "react-hot-toast"
 import { z } from "zod"
 
 import { Button, Input, Tabs } from "./components"
 import { fields } from "./data"
+import { api } from "./services"
+import { masks } from "./utils"
 
 const tabs = ["Balcão", "Telefone", "Oração"]
 
@@ -46,13 +49,34 @@ type FormSchemaType = z.infer<typeof schema>
 
 export default function App() {
   const [tab, setTab] = useState(tabs[0])
+  const [loading, setLoading] = useState(false)
 
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(schema),
   })
 
   function onSubmit(data: FormSchemaType) {
-    console.log(data)
+    setLoading(true)
+
+    const form = {} as Record<string, Record<string, number>>
+
+    Object.entries(data).forEach(([name, fields]) => {
+      form[name] = {}
+
+      Object.entries(fields).forEach(([key, value]) => {
+        console.log({ key, value })
+
+        form[name][key] = masks.clear(value) as number
+      })
+    })
+
+    api
+      .post("/configuration", form)
+      .then(() => toast.success("Configuração atualizada com sucesso."))
+      .catch(() =>
+        toast.error("Desculpe, não conseguimos registrar as informações.")
+      )
+      .finally(() => setLoading(false))
   }
 
   const option = currentTab[tab as keyof typeof currentTab]
@@ -84,11 +108,13 @@ export default function App() {
             </div>
           ))}
 
-          <Button type="submit" className="mt-10 ml-auto">
-            Salvar informações
+          <Button type="submit" disabled={loading} className="mt-10 ml-auto">
+            {loading ? "Salvando ..." : "Salvar informações"}
           </Button>
         </form>
       </FormProvider>
+
+      <Toaster />
     </div>
   )
 }

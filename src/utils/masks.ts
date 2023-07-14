@@ -17,6 +17,15 @@ function money(text: string) {
   return currency(Number(digitsFloat))
 }
 
+function clear(text: string): string | number {
+  const replace = text.replace(/\D/g, "")
+
+  if (typeof replace === "string") return Number(replace)
+
+  return replace
+}
+
 export default {
   money,
+  clear,
 }

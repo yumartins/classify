@@ -29,7 +29,8 @@ class ClassifyConfigurationPage {
    * Options page callback
    */
   public function create_admin_page() {
-    $this->options = get_option('my_option_name');
+    $data = get_option('classify_configuration');
+
     ?>
     <div class="flex flex-col p-10 font-sans">
       <h1 class="!text-2xl font-medium text-gray-900 !p-0">Configuração dos classificados</h1>
@@ -37,6 +38,11 @@ class ClassifyConfigurationPage {
       <div id="classify-configuration"></div>
 
       <script type="module" src="<?php echo plugins_url('dist/index.js', __FILE__)  ?>"></script>
+
+      <script type="module">
+        // Save data from php to localStorage.
+        console.log(<?php echo json_encode($data) ?>)
+      </script>
     </div>
     <?php
   }
