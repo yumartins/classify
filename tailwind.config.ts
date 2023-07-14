@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss"
+import { fontFamily } from "tailwindcss/defaultTheme"
 
 export default {
   theme: {
@@ -6,9 +7,11 @@ export default {
       center: true,
       padding: "2rem",
     },
+
+    fontFamily: {
+      sans: ["Inter", ...fontFamily.sans],
+    },
   },
 
-  plugins: [require("@headlessui/tailwindcss")],
-
-  content: ["./src/*.tsx", "./src/**/*.tsx"],
+  content: ["./src/*.tsx", "./src/**/*.tsx", "./src/**/*.scss", "./lib/*.php"],
 } satisfies Config

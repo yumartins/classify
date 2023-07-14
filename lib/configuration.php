@@ -31,14 +31,13 @@ class ClassifyConfigurationPage {
   public function create_admin_page() {
     $this->options = get_option('my_option_name');
     ?>
-    <div class="wrap">
-      <h1>Configuração dos classificados</h1>
+    <div class="flex flex-col p-10 font-sans">
+      <h1 class="!text-2xl text-gray-900 !p-0">Configuração dos classificados</h1>
       <form method="post" action="options.php">
-
         <div id="classify-configuration"></div>
-
-        <script type="module" src="<?php echo plugins_url('dist/index.js', __FILE__)  ?>"></script>
       </form>
+
+      <script type="module" src="<?php echo plugins_url('dist/index.js', __FILE__)  ?>"></script>
     </div>
     <?php
   }
