@@ -10,7 +10,7 @@ export default defineConfig({
   mode: "production",
 
   build: {
-    outDir: resolve(__dirname, "dist"),
+    outDir: resolve(__dirname, "lib/dist"),
 
     assetsDir: "./",
 

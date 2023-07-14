@@ -14,5 +14,6 @@ Domain Path:  /classify
 ?>
 
 <?php 
+  require_once 'lib/theme.php';
   require_once 'lib/configuration.php';
 ?>

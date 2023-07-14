@@ -8,11 +8,7 @@ export default {
     },
   },
 
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("@headlessui/tailwindcss")],
 
-  content: [
-    "src/*.tsx",
-    "src/**/*.tsx",
-    "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/*.tsx", "./src/**/*.tsx"],
 } satisfies Config
