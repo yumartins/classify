@@ -1,20 +1,35 @@
-import type { Dispatch, SetStateAction } from "react"
+import type { Dispatch, HTMLAttributes, SetStateAction } from "react"
 
-interface TabsProps {
+interface TabsProps extends HTMLAttributes<HTMLDivElement> {
   data: string[]
-  selected: boolean
+  selected: string
   onSelected: Dispatch<SetStateAction<string>>
 }
 
-export default function Tabs({ data, selected, onSelected }: TabsProps) {
+export default function Tabs({
+  data,
+  selected,
+  className,
+  onSelected,
+  ...rest
+}: TabsProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div
+      {...rest}
+      className={`flex items-center w-fit rounded-lg p-2 gap-2 bg-gray-50 ${
+        className || ""
+      }`}
+    >
       {data.map((field) => (
         <button
           key={field}
           type="button"
           onClick={() => onSelected(field)}
-          className="bg-white py-1 px-3 rounded-lg text-gray-500"
+          className={`py-1 px-3 rounded transition-all duration-300 ease-in-out ${
+            selected === field
+              ? "bg-white text-blue-500"
+              : "text-gray-500 hover:text-blue-500"
+          }`}
         >
           {field}
         </button>

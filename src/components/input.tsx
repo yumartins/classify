@@ -1,19 +1,48 @@
-import { InputHTMLAttributes } from "react"
+import type { InputHTMLAttributes } from "react"
+import { useFormContext } from "react-hook-form"
+
+import { masks } from "../utils"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  name: string
+  mask?: "CURRENCY"
   label: string
 }
 
-export default function Input({ name, label, ...rest }: InputProps) {
+export default function Input({ name, mask, label, ...rest }: InputProps) {
+  const {
+    register,
+    formState: { defaultValues },
+  } = useFormContext()
+
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-600" htmlFor={name}>
+    <div className="flex flex-col gap-0.5">
+      <label className="text-xs font-medium text-gray-600" htmlFor={name}>
         {label}
       </label>
+
       <input
         {...rest}
+        {...register(name)}
         name={name}
-        className="w-full px-6 py-3 text-gray-900 bg-white border border-gray-200 appearance-none rounded-xl placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+        onChange={(e) => {
+          let message = e.target.value
+
+          switch (mask) {
+            case "CURRENCY":
+              message = masks.money(message)
+              break
+
+            default:
+              break
+          }
+
+          e.target.value = message
+
+          if (register) register(name).onChange(e)
+        }}
+        className="w-full px-4 py-2 text-gray-800 bg-white border border-gray-200 appearance-none outline-none rounded-lg placeholder:text-gray-400 text-sm transition-all duration-300 ease-in-out hover:border-gray-300"
+        defaultValue={defaultValues?.[name]}
       />
     </div>
   )
