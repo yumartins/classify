@@ -92,7 +92,7 @@ export default function App() {
     })
 
     api
-      .post("/configuration", form)
+      .post("/classify/configuration", form)
       .then(() => toast.success("Configuração atualizada com sucesso."))
       .catch(() =>
         toast.error("Desculpe, não conseguimos registrar as informações.")

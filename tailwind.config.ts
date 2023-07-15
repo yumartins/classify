@@ -14,4 +14,8 @@ export default {
   },
 
   content: ["./src/*.tsx", "./src/**/*.tsx", "./src/**/*.scss", "./lib/*.php"],
+
+  corePlugins: {
+    preflight: false,
+  },
 } satisfies Config

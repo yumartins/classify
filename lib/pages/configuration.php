@@ -1,11 +1,6 @@
 <?php
 class ClassifyConfigurationPage {
   /**
-   * Holds the values to be used in the fields callbacks
-   */
-  private $options;
-
-  /**
    * Start up
    */
   public function __construct() {
@@ -32,12 +27,12 @@ class ClassifyConfigurationPage {
     $data = get_option('classify_configuration');
 
     ?>
-    <div class="flex flex-col p-10 font-sans">
+    <div class="classify flex flex-col p-10 font-sans">
       <h1 class="!text-2xl font-medium text-gray-900 !p-0">Configuração dos classificados</h1>
       
       <div id="classify-configuration"></div>
 
-      <script type="module" src="<?php echo plugins_url('dist/index.js', __FILE__)  ?>"></script>
+      <script type="module" src="<?php echo plugins_url('../dist/index.js', __FILE__)  ?>"></script>
 
       <script type="module">
         window.sessionStorage.setItem('classify-configuration', JSON.stringify(<?php echo json_encode($data) ?>))
