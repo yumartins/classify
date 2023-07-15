@@ -25,7 +25,7 @@ export default function Tabs({
           key={field}
           type="button"
           onClick={() => onSelected(field)}
-          className={`py-1 px-3 rounded transition-all duration-300 ease-in-out ${
+          className={`py-1 px-3 text-sm rounded transition-all duration-300 ease-in-out ${
             selected === field
               ? "bg-white text-blue-500"
               : "bg-transparent text-gray-500 hover:text-blue-500"

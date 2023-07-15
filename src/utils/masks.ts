@@ -25,7 +25,16 @@ function clear(text: string): string | number {
   return replace
 }
 
+function phone(text: string) {
+  return text
+    .replace(/\D/g, "")
+    .replace(/(\d{2})(\d)/, "($1) $2")
+    .replace(/(\d{5})(\d)/, "$1-$2")
+    .replace(/(-\d{4})\d+?$/, "$1")
+}
+
 export default {
   money,
   clear,
+  phone,
 }

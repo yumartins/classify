@@ -21,7 +21,7 @@ class ClassifyDetailPage {
       ),
 
       'supports' => array(
-        'title'
+        'title',
       ),
 
       'public' => true,
@@ -41,9 +41,20 @@ class ClassifyDetailPage {
    * Options page callback
    */
   public function classify_custom_fields() {
+    global $post;
+
+    $data = get_post_meta($post->ID);
+
     function fields() {
-      echo '<div id="classify-detail"></div>';
-      echo "<script type='module' src='". plugin_dir_url(__DIR__) . "dist/detail.js'></script>";
+      ?>
+        <div id="classify-detail"></div>
+
+        <script type="module" src="<?php echo plugin_dir_url(__DIR__) ?>dist/detail.js"></script>
+
+        <script type="module">
+          window.sessionStorage.setItem('classify-form', JSON.stringify(<?php echo json_encode($data) ?>))
+        </script>
+      <?php
     }
 
     add_meta_box('classify-content', 'Informações', 'fields', 'classify');

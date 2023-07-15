@@ -23,9 +23,9 @@ export default {
     "./src/*.tsx",
     "./lib/*.php",
     "./lib/**/*.php",
-    "./src/**/*.tsx",
     "./src/**/*.scss",
-    "./src/**/**/*.tsx",
+    "./src/modules/**/*.tsx",
+    "./src/components/*.tsx",
   ],
 
   corePlugins: {

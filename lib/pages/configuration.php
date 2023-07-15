@@ -25,10 +25,9 @@ class ClassifyConfigurationPage {
    */
   public function create_admin_page() {
     $data = get_option('classify_configuration');
-
     ?>
     <div class="classify flex flex-col p-10 font-sans">
-      <h1 class="!text-2xl font-medium text-gray-900 !p-0">Configuração dos classificados</h1>
+      <h1 class="!text-2xl !font-semibold text-gray-800 !p-0">Configuração dos classificados</h1>
       
       <div id="classify-configuration"></div>
 

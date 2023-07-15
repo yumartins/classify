@@ -5,7 +5,7 @@ import { masks } from "../utils"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string
-  mask?: "CURRENCY"
+  mask?: "PHONE" | "CURRENCY"
   label: string
 }
 
@@ -32,6 +32,10 @@ export default function Input({ name, mask, label, ...rest }: InputProps) {
           let message = e.target.value
 
           switch (mask) {
+            case "PHONE":
+              message = masks.phone(message)
+              break
+
             case "CURRENCY":
               message = masks.money(message)
               break
