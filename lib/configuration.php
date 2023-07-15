@@ -40,8 +40,7 @@ class ClassifyConfigurationPage {
       <script type="module" src="<?php echo plugins_url('dist/index.js', __FILE__)  ?>"></script>
 
       <script type="module">
-        // Save data from php to localStorage.
-        console.log(<?php echo json_encode($data) ?>)
+        window.sessionStorage.setItem('classify-configuration', JSON.stringify(<?php echo json_encode($data) ?>))
       </script>
     </div>
     <?php

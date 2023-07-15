@@ -1,6 +1,6 @@
 import "./styles/main.scss"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm } from "react-hook-form"
 import toast, { Toaster } from "react-hot-toast"
@@ -17,6 +17,7 @@ const prayer = z.object({
   logo2cm: z.string().optional(),
   logo4cm: z.string().optional(),
   valuePerDay: z.string().optional(),
+  valuePerImage: z.string().optional(),
   publicityNotice: z.string().optional(),
   churchInvitation: z.string().optional(),
   sectionSponsorship: z.string().optional(),
@@ -54,6 +55,26 @@ export default function App() {
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(schema),
   })
+
+  useEffect(() => {
+    const session = window.sessionStorage.getItem("classify-configuration")
+
+    if (session) {
+      const parse = JSON.parse(session) as Record<
+        string,
+        Record<string, number>
+      >
+
+      Object.entries(parse).forEach(([name, fields]) => {
+        Object.entries(fields).forEach(([key, value]) => {
+          methods.setValue(
+            `${name}.${key}` as any,
+            masks.money(value.toString())
+          )
+        })
+      })
+    }
+  }, [methods])
 
   function onSubmit(data: FormSchemaType) {
     setLoading(true)
@@ -114,7 +135,7 @@ export default function App() {
         </form>
       </FormProvider>
 
-      <Toaster />
+      <Toaster position="bottom-right" />
     </div>
   )
 }
