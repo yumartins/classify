@@ -28,7 +28,7 @@ export default function Tabs({
           className={`py-1 px-3 rounded transition-all duration-300 ease-in-out ${
             selected === field
               ? "bg-white text-blue-500"
-              : "text-gray-500 hover:text-blue-500"
+              : "bg-transparent text-gray-500 hover:text-blue-500"
           }`}
         >
           {field}

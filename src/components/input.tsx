@@ -17,7 +17,10 @@ export default function Input({ name, mask, label, ...rest }: InputProps) {
 
   return (
     <div className="flex flex-col gap-0.5">
-      <label className="text-xs font-medium text-gray-600" htmlFor={name}>
+      <label
+        htmlFor={name}
+        className="text-xs cursor-default font-medium text-gray-600"
+      >
         {label}
       </label>
 

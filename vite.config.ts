@@ -18,6 +18,8 @@ export default defineConfig({
 
     rollupOptions: {
       input: {
+        form: "./src/modules/form/index.tsx",
+        detail: "./src/modules/detail/index.tsx",
         configuration: "./src/modules/configuration/index.tsx",
       },
 

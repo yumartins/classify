@@ -1,5 +1,17 @@
-<?php 
-  function classify_page() {
+<?php
+class ClassifyDetailPage {
+  /**
+   * Start up
+   */
+  public function __construct() {
+    add_action('init', array($this, 'classify_page'));
+    add_action('add_meta_boxes', array($this, 'classify_custom_fields'));
+  }
+
+  /**
+   * Add page
+   */
+  public function classify_page() {
     register_post_type('classify', array(
       'labels' => array(
         'name' => __('Classificados'),
@@ -23,17 +35,21 @@
       'show_in_rest' => true,
       'rest_namespace' => 'classify',
     ));
-  };
+  }
 
-  function classify_custom_fields() {
+  /**
+   * Options page callback
+   */
+  public function classify_custom_fields() {
     function fields() {
-      echo '<div id="classify-configuration"></div>';
-      echo "<script type='module' src='". plugins_url('/dist/index.js', __FILE__) ."'></script>";
+      echo '<div id="classify-detail"></div>';
+      echo "<script type='module' src='". plugin_dir_url(__DIR__) . "dist/detail.js'></script>";
     }
 
     add_meta_box('classify-content', 'Informações', 'fields', 'classify');
-  };
+  }
+}
 
-  add_action('init', 'classify_page');
-  add_action('add_meta_boxes', 'classify_custom_fields');
+if(is_admin())
+  $classify_detail_page = new ClassifyDetailPage();
 ?>

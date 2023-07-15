@@ -22,15 +22,12 @@
   
     ol,
     ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
+      @apply m-0 p-0 list-none;
     }
   
     img,
     svg {
-      display: block;
-      vertical-align: middle;
+      @apply block align-middle;
     }
   
     *,
@@ -39,6 +36,10 @@
       border-width: 0;
       border-style: solid;
       border-color: theme('borderColor.DEFAULT', currentColor);
+    }
+
+    button {
+      @apply cursor-pointer;
     }
   }
 }

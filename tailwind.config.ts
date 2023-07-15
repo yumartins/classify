@@ -3,6 +3,12 @@ import { fontFamily } from "tailwindcss/defaultTheme"
 
 export default {
   theme: {
+    extend: {
+      colors: {
+        transparent: "transparent",
+      },
+    },
+
     container: {
       center: true,
       padding: "2rem",

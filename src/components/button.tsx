@@ -8,7 +8,7 @@ export default function Button({
   return (
     <button
       {...rest}
-      className={`bg-blue-500 py-2 px-4 rounded-lg text-white transition-all duration-300 ease-in-out hover:bg-blue-600 ${
+      className={`bg-blue-500 outline-none py-2 px-4 rounded-lg text-white transition-all duration-300 ease-in-out hover:bg-blue-600 ${
         className || ""
       }`}
     >
