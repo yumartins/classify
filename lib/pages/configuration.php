@@ -32,7 +32,7 @@ class ClassifyConfigurationPage {
       
       <div id="classify-configuration"></div>
 
-      <script type="module" src="<?php echo plugins_url('../dist/index.js', __FILE__)  ?>"></script>
+      <script type="module" src="<?php echo plugins_url('../dist/configuration.js', __FILE__)  ?>"></script>
 
       <script type="module">
         window.sessionStorage.setItem('classify-configuration', JSON.stringify(<?php echo json_encode($data) ?>))

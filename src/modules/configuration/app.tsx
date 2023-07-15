@@ -1,15 +1,15 @@
-import "./styles/main.scss"
+import "@/styles/main.scss"
 
 import { useEffect, useState } from "react"
+import { Button, Input, Tabs } from "@/components"
+import { api } from "@/services"
+import { masks } from "@/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm } from "react-hook-form"
 import toast, { Toaster } from "react-hot-toast"
 import { z } from "zod"
 
-import { Button, Input, Tabs } from "./components"
 import { fields } from "./data"
-import { api } from "./services"
-import { masks } from "./utils"
 
 const tabs = ["Balcão", "Telefone", "Oração"]
 

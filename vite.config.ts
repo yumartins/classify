@@ -17,7 +17,9 @@ export default defineConfig({
     emptyOutDir: true,
 
     rollupOptions: {
-      input: "./src/index.tsx",
+      input: {
+        configuration: "./src/modules/configuration/index.tsx",
+      },
 
       output: {
         entryFileNames: "[name].js",
@@ -29,7 +31,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      "~": resolve(__dirname, "./node_modules"),
+      "@": resolve(__dirname, "./src"),
     },
   },
 

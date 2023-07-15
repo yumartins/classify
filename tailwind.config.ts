@@ -13,7 +13,14 @@ export default {
     },
   },
 
-  content: ["./src/*.tsx", "./src/**/*.tsx", "./src/**/*.scss", "./lib/*.php"],
+  content: [
+    "./src/*.tsx",
+    "./lib/*.php",
+    "./lib/**/*.php",
+    "./src/**/*.tsx",
+    "./src/**/*.scss",
+    "./src/**/**/*.tsx",
+  ],
 
   corePlugins: {
     preflight: false,
