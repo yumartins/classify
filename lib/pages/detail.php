@@ -41,11 +41,12 @@ class ClassifyDetailPage {
    * Options page callback
    */
   public function classify_custom_fields() {
-    global $post;
-
-    $data = get_post_meta($post->ID);
-
     function fields() {
+      $post = get_post();
+
+      $data = get_post_meta($post->ID);
+  
+      $data = array_combine(array_keys($data), array_column($data, '0'));
       ?>
         <div id="classify-detail"></div>
 

@@ -15,7 +15,7 @@ const schema = z.object({
     .nonempty("Digite seu e-mail"),
   phone: z
     .string()
-    .min(14, "Digite um telefone válido")
+    .min(15, "Digite um telefone válido")
     .nonempty("Digite seu telefone"),
 })
 
