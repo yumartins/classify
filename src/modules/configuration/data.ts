@@ -30,14 +30,14 @@ const printed = [
     placeholder: "Digite o valor por linha",
   },
   {
-    name: "boldLetterInTitle",
-    label: "Letra negrito no título",
-    placeholder: "Digite o valor para letra negrito no título",
+    name: "bold",
+    label: "Letra negrito",
+    placeholder: "Digite o valor para letra em negrito",
   },
   {
-    name: "regularLetterInTheBody",
-    label: "Letra regular no corpo",
-    placeholder: "Digite o valor para letra regular no corpo",
+    name: "regular",
+    label: "Letra regular",
+    placeholder: "Digite o valor para letra regular",
   },
   {
     name: "cursive",

@@ -1,14 +1,18 @@
 import "@/styles/main.scss"
 
-import { useState } from "react"
-import { Button, Input } from "@/components"
+import { useMemo, useState } from "react"
+import { Button, Input, Select, Tabs, Textarea } from "@/components"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm } from "react-hook-form"
 import { Toaster } from "react-hot-toast"
 import { z } from "zod"
 
+import { fontType, numberOfCaracteresByFontType } from "../data"
+import { categories } from "./data"
+
 const schema = z.object({
   name: z.string().nonempty("Digite seu nome completo"),
+  body: z.string().nonempty("Digite o corpo do anúncio"),
   email: z
     .string()
     .email("Digite um e-mail válido")
@@ -17,11 +21,18 @@ const schema = z.object({
     .string()
     .min(15, "Digite um telefone válido")
     .nonempty("Digite seu telefone"),
+  title: z.string().nonempty("Digite o título do anúncio"),
 })
 
 type FormSchemaType = z.infer<typeof schema>
 
+const initialFields = {
+  body: "Normal",
+  title: "Negrito",
+}
+
 export default function App() {
+  const [form, setForm] = useState(initialFields)
   const [loading, setLoading] = useState(false)
 
   const methods = useForm<FormSchemaType>({
@@ -35,6 +46,42 @@ export default function App() {
 
     setLoading(false)
   }
+
+  const body = methods.watch("body")
+  const title = methods.watch("title")
+
+  const numberOfLines = useMemo(() => {
+    const numberOfCaracteresBody =
+      numberOfCaracteresByFontType[
+        fontType[
+          form.body as keyof typeof fontType
+        ] as keyof typeof numberOfCaracteresByFontType
+      ]
+    const numberOfCaracteresTitle =
+      numberOfCaracteresByFontType[
+        fontType[
+          form.title as keyof typeof fontType
+        ] as keyof typeof numberOfCaracteresByFontType
+      ]
+
+    console.log({
+      body,
+      title,
+      numberOfCaracteresBody,
+      numberOfCaracteresTitle,
+    })
+
+    return {
+      body:
+        body?.length > 0
+          ? Math.round(body.length / numberOfCaracteresBody) + 1
+          : 0,
+      title:
+        title?.length > 0
+          ? Math.round(title.length / numberOfCaracteresTitle) + 1
+          : 0,
+    }
+  }, [form, body, title])
 
   return (
     <div className="classify flex flex-col bg-white p-8 rounded-lg border border-solid border-gray-200">
@@ -63,6 +110,60 @@ export default function App() {
             label="Telefone"
             placeholder="Digite seu telefone"
           />
+
+          <Select
+            name="category"
+            label="Categoria"
+            options={categories}
+            placeholder="Selecione a categoria"
+          />
+
+          <div className="flex flex-col gap-2">
+            <Input
+              name="title"
+              label="Título"
+              placeholder="Digite o título do anúncio"
+            />
+
+            <div className="flex items-center justify-between">
+              <Tabs
+                data={Object.keys(fontType)}
+                size="sm"
+                selected={form.title}
+                onSelected={(value) =>
+                  setForm((prev) => ({ ...prev, title: value }))
+                }
+              />
+
+              <p className="text-sm text-gray-500">
+                {`Número de linhas: ${numberOfLines.title || 0}`}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Textarea
+              name="body"
+              rows={5}
+              label="Corpo"
+              placeholder="Digite o texto docorpo do anúncio"
+            />
+
+            <div className="flex items-center justify-between">
+              <Tabs
+                data={Object.keys(fontType)}
+                size="sm"
+                selected={form.body}
+                onSelected={(value) =>
+                  setForm((prev) => ({ ...prev, body: value }))
+                }
+              />
+
+              <p className="text-sm text-gray-500">
+                {`Número de linhas: ${numberOfLines.body || 0}`}
+              </p>
+            </div>
+          </div>
 
           <Button type="submit" disabled={loading} className="mt-10 ml-auto">
             {loading ? "Salvando ..." : "Salvar informações"}

@@ -1,0 +1,16 @@
+export const categories = [
+  "01 - Imóveis",
+  "02 - Terrenos, Sítios e Chácaras",
+  "03 - Veículos",
+  "04 - Negócios",
+  "05 - Diveros",
+  "06 - Áreas de Lazer / Temporada",
+  "07 - Empregos",
+  "08 - Serviços",
+  "09 - Comidinha Hoje",
+  "10 - Animais",
+  "11 - Necrologia",
+  "12 - Atas e Editais",
+  "13 - Cinema",
+  "14 - Aniversários",
+]
