@@ -22,7 +22,7 @@ export default function Input({
   } = useFormContext()
 
   return (
-    <div className={`flex flex-col gap-0.5 ${className || ""}`}>
+    <div className={`flex flex-col gap-0.5 w-full ${className || ""}`}>
       <label
         htmlFor={name}
         className="text-xs cursor-default font-medium text-gray-600"

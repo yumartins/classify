@@ -9,6 +9,11 @@ export const logoType = {
   "Logo de 4cm": "logo4cm",
 }
 
+export const numberOfColumns = {
+  "1 coluna": "one",
+  "2 colunas": "two",
+}
+
 export const numberOfCaracteresByFontType = {
   bold: 22,
   regular: 26,

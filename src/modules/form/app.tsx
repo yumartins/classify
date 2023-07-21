@@ -9,25 +9,14 @@ import toast, { Toaster } from "react-hot-toast"
 import { type ImageListType, type ImageType } from "react-images-uploading"
 import { z } from "zod"
 
-import { fontType, logoType, numberOfCaracteresByFontType } from "../data"
+import {
+  fontType,
+  logoType,
+  numberOfCaracteresByFontType,
+  numberOfColumns,
+} from "../data"
 import { categories } from "./data"
-
-const schema = z.object({
-  name: z.string().nonempty("Digite seu nome completo"),
-  body: z.string().nonempty("Digite o corpo do anúncio"),
-  email: z
-    .string()
-    .email("Digite um e-mail válido")
-    .nonempty("Digite seu e-mail"),
-  phone: z
-    .string()
-    .min(15, "Digite um telefone válido")
-    .nonempty("Digite seu telefone"),
-  title: z.string().nonempty("Digite o título do anúncio"),
-  endAt: z.string().nonempty("Digite a data de fim do anúncio"),
-  startAt: z.string().nonempty("Digite a data de início do anúncio"),
-  category: z.string().nonempty("Selecione a categoria do anúncio"),
-})
+import schema from "./schema"
 
 type FormSchemaType = z.infer<typeof schema>
 
@@ -37,11 +26,13 @@ const initialFields = {
   title: "Negrito",
   gallery: [] as ImageType[],
   logoType: "Logo de 2cm",
+  subscriber: "Não",
+  numberOfColumns: "1 coluna",
 }
 
 export default function App() {
   const [form, setForm] = useState(initialFields)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState<"CALCULATE" | "SUBMIT" | null>(null)
 
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(schema),
@@ -52,19 +43,26 @@ export default function App() {
   }
 
   async function onSubmit(data: FormSchemaType) {
-    setLoading(true)
+    setLoading("SUBMIT")
+
+    const { address, ...rest } = data
 
     const fields = {
-      ...data,
+      ...rest,
+      ...address,
       bodyType: fontType[form.body as keyof typeof fontType],
+      logoType: logoType[form.logoType as keyof typeof logoType],
       titleType: fontType[form.title as keyof typeof fontType],
+      subscriber: form.subscriber === "Sim",
+      numberOfColumns:
+        numberOfColumns[form.numberOfColumns as keyof typeof numberOfColumns],
     }
 
     api
       .post("/classify/form", fields)
       .then(() => toast.success("Anúncio enviado com sucesso."))
       .catch(() => toast.error("Desculpe, não conseguimos enviar o anúncio."))
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(null))
   }
 
   const body = methods.watch("body")
@@ -124,12 +122,77 @@ export default function App() {
             placeholder="Digite seu telefone"
           />
 
+          <Input
+            name="address.street"
+            label="Rua"
+            placeholder="Digite seu endereço"
+          />
+
+          <div className="flex items-center gap-4">
+            <Input
+              name="address.number"
+              label="Número"
+              placeholder="Digite o número do endereço"
+            />
+
+            <Input
+              name="address.neighborhood"
+              label="Bairro"
+              placeholder="Digite o bairro do endereço"
+            />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Input
+              name="address.city"
+              label="Cidade"
+              placeholder="Digite sua cidade"
+            />
+
+            <Input
+              name="address.state"
+              label="Estado"
+              maxLength={2}
+              placeholder="Digite seu estado"
+            />
+          </div>
+
           <Select
             name="category"
             label="Categoria"
             options={categories}
             placeholder="Selecione a categoria"
           />
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-0.5">
+              <p className="text-xs cursor-default font-medium text-gray-600">
+                É Assinante?
+              </p>
+
+              <Tabs
+                data={["Sim", "Não"]}
+                selected={form.subscriber}
+                onSelected={(value) =>
+                  setForm((prev) => ({ ...prev, subscriber: value }))
+                }
+              />
+            </div>
+
+            <div className="flex flex-col gap-0.5">
+              <p className="text-xs cursor-default font-medium text-gray-600">
+                Número de colunas
+              </p>
+
+              <Tabs
+                data={Object.keys(numberOfColumns)}
+                selected={form.numberOfColumns}
+                onSelected={(value) =>
+                  setForm((prev) => ({ ...prev, numberOfColumns: value }))
+                }
+              />
+            </div>
+          </div>
 
           <div className="flex flex-col gap-2">
             <Input
@@ -181,7 +244,6 @@ export default function App() {
               name="startAt"
               mask="DATE"
               label="Data de início"
-              className="w-full"
               placeholder="Digite a data de início do anúncio"
             />
 
@@ -189,7 +251,6 @@ export default function App() {
               name="endAt"
               mask="DATE"
               label="Data de fim"
-              className="w-full"
               placeholder="Digite a data de fim do anúncio"
             />
           </div>
@@ -215,9 +276,19 @@ export default function App() {
             onChange={(value) => onFile("gallery", value)}
           />
 
-          <Button type="submit" disabled={loading} className="mt-10 ml-auto">
-            {loading ? "Salvando ..." : "Salvar informações"}
-          </Button>
+          <div className="flex mt-10 items-center justify-end gap-4">
+            <Button
+              type="button"
+              disabled={loading === "CALCULATE"}
+              variant="secondary"
+            >
+              {loading === "CALCULATE" ? "Calculando ..." : "Calcular"}
+            </Button>
+
+            <Button type="submit" disabled={loading === "SUBMIT"}>
+              {loading === "SUBMIT" ? "Enviando ..." : "Enviar informações"}
+            </Button>
+          </div>
         </form>
       </FormProvider>
 

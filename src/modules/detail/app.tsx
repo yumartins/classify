@@ -7,10 +7,17 @@ import { FormProvider, useForm } from "react-hook-form"
 import { Toaster } from "react-hot-toast"
 import { z } from "zod"
 
+import { staticFields } from "./data"
+
 const initialFields = {
+  city: "",
   email: "",
   phone: "",
+  state: "",
+  street: "",
+  number: "",
   category: "",
+  neighborhood: "",
 }
 
 const schema = z.object({
@@ -35,12 +42,27 @@ export default function App() {
     if (session) {
       const parse = JSON.parse(session) as Record<string, string>
 
-      const { email, phone, category, ...rest } = parse
+      const {
+        city,
+        state,
+        email,
+        phone,
+        street,
+        number,
+        category,
+        neighborhood,
+        ...rest
+      } = parse
 
       setData({
+        city: city || "",
+        state: state || "",
         email: email || "",
         phone: phone || "",
+        street: street || "",
+        number: number || "",
         category: category || "",
+        neighborhood: neighborhood || "",
       })
 
       Object.entries(rest).forEach(([key, value]) => {
@@ -56,23 +78,15 @@ export default function App() {
   return (
     <div className="classify mt-4 flex flex-col gap-4">
       <div className="grid grid-cols-3 gap-4">
-        <div className="flex flex-col gap-0.5">
-          <p className="text-xs font-medium text-gray-400">E-mail</p>
+        {staticFields.map(({ key, name }) => (
+          <div key={key} className="flex flex-col gap-0.5">
+            <p className="text-xs font-medium text-gray-400">{name}</p>
 
-          <p className="text-sm font-bold text-gray-800">{data.email}</p>
-        </div>
-
-        <div className="flex flex-col gap-0.5">
-          <p className="text-xs font-medium text-gray-400">Telefone</p>
-
-          <p className="text-sm font-bold text-gray-800">{data.phone}</p>
-        </div>
-
-        <div className="flex flex-col gap-0.5">
-          <p className="text-xs font-medium text-gray-400">Categoria</p>
-
-          <p className="text-sm font-bold text-gray-800">{data.category}</p>
-        </div>
+            <p className="text-sm font-bold text-gray-800">
+              {data[key as keyof typeof data] || "-"}
+            </p>
+          </div>
+        ))}
       </div>
 
       <FormProvider {...methods}>
