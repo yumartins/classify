@@ -1,21 +1,30 @@
 import "@/styles/main.scss"
 
-import { useEffect } from "react"
-import { Input } from "@/components"
+import { useEffect, useState } from "react"
+import { Input, Textarea } from "@/components"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm } from "react-hook-form"
 import { Toaster } from "react-hot-toast"
 import { z } from "zod"
 
+const initialFields = {
+  email: "",
+  phone: "",
+  category: "",
+}
+
 const schema = z.object({
-  name: z.string().optional(),
-  email: z.string().email("Digite um e-mail válido").optional(),
-  phone: z.string().min(15, "Digite um telefone válido").optional(),
+  body: z.string().nonempty("Digite o corpo do anúncio"),
+  title: z.string().nonempty("Digite o título do anúncio"),
+  endAt: z.string().nonempty("Digite a data de fim do anúncio"),
+  startAt: z.string().nonempty("Digite a data de início do anúncio"),
 })
 
 type FormSchemaType = z.infer<typeof schema>
 
 export default function App() {
+  const [data, setData] = useState(initialFields)
+
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(schema),
   })
@@ -26,7 +35,15 @@ export default function App() {
     if (session) {
       const parse = JSON.parse(session) as Record<string, string>
 
-      Object.entries(parse).forEach(([key, value]) => {
+      const { email, phone, category, ...rest } = parse
+
+      setData({
+        email: email || "",
+        phone: phone || "",
+        category: category || "",
+      })
+
+      Object.entries(rest).forEach(([key, value]) => {
         methods.setValue(key as keyof FormSchemaType, value)
       })
     }
@@ -37,26 +54,66 @@ export default function App() {
   }
 
   return (
-    <div className="classify">
+    <div className="classify mt-4 flex flex-col gap-4">
+      <div className="grid grid-cols-3 gap-4">
+        <div className="flex flex-col gap-0.5">
+          <p className="text-xs font-medium text-gray-400">E-mail</p>
+
+          <p className="text-sm font-bold text-gray-800">{data.email}</p>
+        </div>
+
+        <div className="flex flex-col gap-0.5">
+          <p className="text-xs font-medium text-gray-400">Telefone</p>
+
+          <p className="text-sm font-bold text-gray-800">{data.phone}</p>
+        </div>
+
+        <div className="flex flex-col gap-0.5">
+          <p className="text-xs font-medium text-gray-400">Categoria</p>
+
+          <p className="text-sm font-bold text-gray-800">{data.category}</p>
+        </div>
+      </div>
+
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="flex flex-col mt-4 gap-4"
+          className="flex flex-col gap-4"
         >
           <Input
-            name="email"
-            label="E-mail"
+            name="title"
+            label="Título"
             disabled
-            placeholder="Digite seu e-mail"
+            placeholder="Digite o título do anúncio"
           />
 
-          <Input
-            name="phone"
-            mask="PHONE"
-            label="Telefone"
+          <Textarea
+            name="body"
+            rows={5}
+            label="Corpo"
             disabled
-            placeholder="Digite seu telefone"
+            placeholder="Digite o texto docorpo do anúncio"
           />
+
+          <div className="flex items-center gap-4">
+            <Input
+              name="startAt"
+              mask="DATE"
+              label="Data de início"
+              disabled
+              className="w-full"
+              placeholder="Digite a data de início do anúncio"
+            />
+
+            <Input
+              name="endAt"
+              mask="DATE"
+              label="Data de fim"
+              disabled
+              className="w-full"
+              placeholder="Digite a data de fim do anúncio"
+            />
+          </div>
         </form>
       </FormProvider>
 

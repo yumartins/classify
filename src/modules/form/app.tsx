@@ -2,9 +2,10 @@ import "@/styles/main.scss"
 
 import { useMemo, useState } from "react"
 import { Button, Input, Select, Tabs, Textarea, Upload } from "@/components"
+import { api } from "@/services"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm } from "react-hook-form"
-import { Toaster } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast"
 import { type ImageListType, type ImageType } from "react-images-uploading"
 import { z } from "zod"
 
@@ -23,6 +24,9 @@ const schema = z.object({
     .min(15, "Digite um telefone válido")
     .nonempty("Digite seu telefone"),
   title: z.string().nonempty("Digite o título do anúncio"),
+  endAt: z.string().nonempty("Digite a data de fim do anúncio"),
+  startAt: z.string().nonempty("Digite a data de início do anúncio"),
+  category: z.string().nonempty("Selecione a categoria do anúncio"),
 })
 
 type FormSchemaType = z.infer<typeof schema>
@@ -47,12 +51,20 @@ export default function App() {
     setForm((prev) => ({ ...prev, [type]: imageList }))
   }
 
-  function onSubmit(data: FormSchemaType) {
+  async function onSubmit(data: FormSchemaType) {
     setLoading(true)
 
-    console.log({ data })
+    const fields = {
+      ...data,
+      bodyType: fontType[form.body as keyof typeof fontType],
+      titleType: fontType[form.title as keyof typeof fontType],
+    }
 
-    setLoading(false)
+    api
+      .post("/classify/form", fields)
+      .then(() => toast.success("Anúncio enviado com sucesso."))
+      .catch(() => toast.error("Desculpe, não conseguimos enviar o anúncio."))
+      .finally(() => setLoading(false))
   }
 
   const body = methods.watch("body")

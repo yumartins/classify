@@ -6,8 +6,15 @@
       'post_type' => 'classify',
       'post_title' => $params['name'],
       'meta_input' => array(
+        'body' => $params['body'],
         'email' => $params['email'],
         'phone' => $params['phone'],
+        'title' => $params['title'],
+        'endAt' => $params['endAt'],
+        'startAt' => $params['startAt'],
+        'category' => $params['category'],
+        'bodyType' => $params['bodyType'],
+        'titleType' => $params['titleType'],
       ),
     ));
 

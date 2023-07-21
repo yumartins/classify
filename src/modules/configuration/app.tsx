@@ -85,8 +85,6 @@ export default function App() {
       form[name] = {}
 
       Object.entries(fields).forEach(([key, value]) => {
-        console.log({ key, value })
-
         form[name][key] = masks.clear(value) as number
       })
     })
