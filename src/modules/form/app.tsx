@@ -1,13 +1,14 @@
 import "@/styles/main.scss"
 
 import { useMemo, useState } from "react"
-import { Button, Input, Select, Tabs, Textarea } from "@/components"
+import { Button, Input, Select, Tabs, Textarea, Upload } from "@/components"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm } from "react-hook-form"
 import { Toaster } from "react-hot-toast"
+import { type ImageListType, type ImageType } from "react-images-uploading"
 import { z } from "zod"
 
-import { fontType, numberOfCaracteresByFontType } from "../data"
+import { fontType, logoType, numberOfCaracteresByFontType } from "../data"
 import { categories } from "./data"
 
 const schema = z.object({
@@ -28,7 +29,10 @@ type FormSchemaType = z.infer<typeof schema>
 
 const initialFields = {
   body: "Normal",
+  logo: [] as ImageType[],
   title: "Negrito",
+  gallery: [] as ImageType[],
+  logoType: "Logo de 2cm",
 }
 
 export default function App() {
@@ -38,6 +42,10 @@ export default function App() {
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(schema),
   })
+
+  function onFile(type: "logo" | "gallery", imageList: ImageListType) {
+    setForm((prev) => ({ ...prev, [type]: imageList }))
+  }
 
   function onSubmit(data: FormSchemaType) {
     setLoading(true)
@@ -63,13 +71,6 @@ export default function App() {
           form.title as keyof typeof fontType
         ] as keyof typeof numberOfCaracteresByFontType
       ]
-
-    console.log({
-      body,
-      title,
-      numberOfCaracteresBody,
-      numberOfCaracteresTitle,
-    })
 
     return {
       body:
@@ -128,7 +129,6 @@ export default function App() {
             <div className="flex items-center justify-between">
               <Tabs
                 data={Object.keys(fontType)}
-                size="sm"
                 selected={form.title}
                 onSelected={(value) =>
                   setForm((prev) => ({ ...prev, title: value }))
@@ -152,7 +152,6 @@ export default function App() {
             <div className="flex items-center justify-between">
               <Tabs
                 data={Object.keys(fontType)}
-                size="sm"
                 selected={form.body}
                 onSelected={(value) =>
                   setForm((prev) => ({ ...prev, body: value }))
@@ -164,6 +163,45 @@ export default function App() {
               </p>
             </div>
           </div>
+
+          <div className="flex items-center gap-4">
+            <Input
+              name="startAt"
+              mask="DATE"
+              label="Data de início"
+              className="w-full"
+              placeholder="Digite a data de início do anúncio"
+            />
+
+            <Input
+              name="endAt"
+              mask="DATE"
+              label="Data de fim"
+              className="w-full"
+              placeholder="Digite a data de fim do anúncio"
+            />
+          </div>
+
+          <Upload
+            label="Logo"
+            value={form.logo}
+            onChange={(value) => onFile("logo", value)}
+          >
+            <Tabs
+              data={Object.keys(logoType)}
+              selected={form.logoType}
+              onSelected={(value) =>
+                setForm((prev) => ({ ...prev, logoType: value }))
+              }
+            />
+          </Upload>
+
+          <Upload
+            label="Fotos (Apenas para Digital)"
+            value={form.gallery}
+            multiple
+            onChange={(value) => onFile("gallery", value)}
+          />
 
           <Button type="submit" disabled={loading} className="mt-10 ml-auto">
             {loading ? "Salvando ..." : "Salvar informações"}

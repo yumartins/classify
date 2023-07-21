@@ -2,19 +2,12 @@ import type { HTMLAttributes } from "react"
 
 interface TabsProps extends HTMLAttributes<HTMLDivElement> {
   data: string[]
-  size?: "sm" | "md"
   selected: string
   onSelected: (tab: string) => void
 }
 
-const sizes = {
-  sm: "p-1",
-  md: "p2",
-}
-
 export default function Tabs({
   data,
-  size = "md",
   selected,
   className,
   onSelected,
@@ -23,9 +16,8 @@ export default function Tabs({
   return (
     <div
       {...rest}
-      className={`flex items-center w-fit rounded-lg gap-2 bg-gray-50 ${
-        sizes[size]
-      } ${className || ""}`}
+      className={`flex items-center w-fit rounded-lg p-1 gap-2 bg-gray-50 
+      ${className || ""}`}
     >
       {data.map((field) => (
         <button

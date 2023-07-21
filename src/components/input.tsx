@@ -5,18 +5,24 @@ import { masks } from "../utils"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string
-  mask?: "PHONE" | "CURRENCY"
+  mask?: "DATE" | "PHONE" | "CURRENCY"
   label: string
 }
 
-export default function Input({ name, mask, label, ...rest }: InputProps) {
+export default function Input({
+  name,
+  mask,
+  label,
+  className,
+  ...rest
+}: InputProps) {
   const {
     register,
     formState: { defaultValues },
   } = useFormContext()
 
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className={`flex flex-col gap-0.5 ${className || ""}`}>
       <label
         htmlFor={name}
         className="text-xs cursor-default font-medium text-gray-600"
@@ -32,6 +38,10 @@ export default function Input({ name, mask, label, ...rest }: InputProps) {
           let message = e.target.value
 
           switch (mask) {
+            case "DATE":
+              message = masks.date(message)
+              break
+
             case "PHONE":
               message = masks.phone(message)
               break

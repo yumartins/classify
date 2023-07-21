@@ -5,6 +5,14 @@ function currency(value: number) {
   }).format(value)
 }
 
+function date(text: string) {
+  return text
+    .replace(/\D/g, "")
+    .replace(/(\d{2})(\d)/, "$1/$2")
+    .replace(/(\d{2})(\d)/, "$1/$2")
+    .replace(/(\d{4})(\d)/, "$1")
+}
+
 function money(text: string) {
   const onlyDigits = text
     .split("")
@@ -34,6 +42,7 @@ function phone(text: string) {
 }
 
 export default {
+  date,
   money,
   clear,
   phone,
