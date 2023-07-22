@@ -29,15 +29,39 @@ const schema = z.object({
 
 type FormSchemaType = z.infer<typeof schema>
 
+type FormFile = {
+  name: string
+  path: string
+}
+
+type Files = {
+  logo: FormFile | null
+  gallery: FormFile[]
+}
+
 export default function App() {
   const [data, setData] = useState(initialFields)
+  const [files, setFiles] = useState<Files | null>(null)
 
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(schema),
   })
 
   useEffect(() => {
+    const media = window.sessionStorage.getItem("classify-media")
     const session = window.sessionStorage.getItem("classify-form")
+
+    if (media) {
+      const parse = JSON.parse(media) as FormFile[]
+
+      const logo = parse.find(({ name }) => name.includes("logo-"))
+      const gallery = parse.filter(({ name }) => !name.includes("logo-"))
+
+      setFiles({
+        logo: logo || null,
+        gallery,
+      })
+    }
 
     if (session) {
       const parse = JSON.parse(session) as Record<string, string>
@@ -87,6 +111,37 @@ export default function App() {
             </p>
           </div>
         ))}
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        {files?.logo && (
+          <div className="col-span-1 flex flex-col gap-0.5">
+            <p className="text-xs font-medium text-gray-400">Logo</p>
+
+            <img
+              src={files.logo.path}
+              alt=""
+              className="rounded-lg w-full object-contain"
+            />
+          </div>
+        )}
+
+        {files?.gallery && (
+          <div className="col-span-2 flex flex-col gap-0.5">
+            <p className="text-xs font-medium text-gray-400">Fotos (Digital)</p>
+
+            <div className="grid grid-cols-3 gap-2">
+              {files.gallery.map(({ name, path }) => (
+                <img
+                  src={path}
+                  key={name}
+                  alt=""
+                  className="rounded-lg w-full object-contain max-h-60"
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <FormProvider {...methods}>

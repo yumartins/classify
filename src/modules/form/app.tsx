@@ -60,7 +60,37 @@ export default function App() {
 
     api
       .post("/classify/form", fields)
-      .then(() => toast.success("Anúncio enviado com sucesso."))
+      .then(async ({ data }) => {
+        if (form.logo.length > 0 || form.gallery.length > 0) {
+          const logo = form.logo.length > 0 ? form.logo[0].file : undefined
+
+          const gallery =
+            form.gallery.length > 0
+              ? form.gallery.map(({ file }) => file as File)
+              : undefined
+
+          const fields = new FormData()
+
+          console.log({ form, logo, gallery })
+
+          fields.append("post_id", data.id)
+
+          if (logo) fields.append("logo", logo, `logo-${data.id}.png`)
+
+          if (gallery)
+            gallery.forEach((file) => fields.append("gallery[]", file))
+
+          await api
+            .post("/classify/upload", fields, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .catch(({ response }) => toast.error(response.message))
+        }
+
+        toast.success("Anúncio enviado com sucesso.")
+      })
       .catch(() => toast.error("Desculpe, não conseguimos enviar o anúncio."))
       .finally(() => setLoading(null))
   }

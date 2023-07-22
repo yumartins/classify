@@ -45,8 +45,23 @@ class ClassifyDetailPage {
       $post = get_post();
 
       $data = get_post_meta($post->ID);
+
+      $files = [];
+
+      $media = get_attached_media('image');
   
       $data = array_combine(array_keys($data), array_column($data, '0'));
+      
+      if (isset($media)) {
+        foreach ($media as $elem) {
+          $file = array(
+            'path' => $elem->guid,
+            'name' => $elem->post_title,
+          );
+
+          array_push($files, $file);
+        }
+      }
       ?>
         <div id="classify-detail"></div>
 
@@ -54,6 +69,7 @@ class ClassifyDetailPage {
 
         <script type="module">
           window.sessionStorage.setItem('classify-form', JSON.stringify(<?php echo json_encode($data) ?>))
+          window.sessionStorage.setItem('classify-media', JSON.stringify(<?php echo json_encode($files) ?>))
         </script>
       <?php
     }
