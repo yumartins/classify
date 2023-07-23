@@ -20,8 +20,11 @@ export default z.object({
     .min(15, "Digite um telefone válido")
     .nonempty("Digite seu telefone"),
   title: z.string().nonempty("Digite o título do anúncio"),
+  total: z.string().optional(),
   endAt: z.string().nonempty("Digite a data de fim do anúncio"),
   address,
   startAt: z.string().nonempty("Digite a data de início do anúncio"),
   category: z.string().nonempty("Selecione a categoria do anúncio"),
+  discount: z.string().optional(),
+  totalWithDiscount: z.string().optional(),
 })

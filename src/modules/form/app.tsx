@@ -42,6 +42,8 @@ export default function App() {
         methods={methods}
         setForm={setForm}
         setAmount={setAmount}
+        clearForm
+        hasCalculate
       />
 
       <Toaster position="bottom-right" />

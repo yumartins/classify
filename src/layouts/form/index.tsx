@@ -1,4 +1,10 @@
-import { useMemo, useState, type Dispatch, type SetStateAction } from "react"
+import {
+  useMemo,
+  useState,
+  type Dispatch,
+  type PropsWithChildren,
+  type SetStateAction,
+} from "react"
 import { Button, Input, Select, Tabs, Textarea, Upload } from "@/components"
 import {
   fontType,
@@ -38,12 +44,15 @@ type Form = {
   numberOfColumns: string
 }
 
-interface FormProps {
+interface FormProps extends PropsWithChildren {
   form: Form
   amount: string | null
   methods: UseFormReturn<FormSchemaType>
   setForm: Dispatch<SetStateAction<Form>>
   setAmount: Dispatch<SetStateAction<string | null>>
+  clearForm?: boolean
+  isEditable?: boolean
+  hasCalculate?: boolean
 }
 
 export default function FormLayout({
@@ -51,7 +60,11 @@ export default function FormLayout({
   amount,
   setForm,
   methods,
+  children,
+  clearForm,
   setAmount,
+  isEditable,
+  hasCalculate,
 }: FormProps) {
   const [loading, setLoading] = useState<"CALCULATE" | "SUBMIT" | null>(null)
 
@@ -145,8 +158,6 @@ export default function FormLayout({
 
           const fields = new FormData()
 
-          console.log({ form, logo, gallery })
-
           fields.append("post_id", data.id)
 
           if (logo) fields.append("logo", logo, `logo-${data.id}.png`)
@@ -163,10 +174,12 @@ export default function FormLayout({
             .catch(({ response }) => toast.error(response.message))
         }
 
-        setForm(initialFields)
-        setAmount(null)
+        if (clearForm) {
+          setForm(initialFields)
+          setAmount(null)
 
-        methods.reset()
+          methods.reset()
+        }
 
         toast.success("Anúncio enviado com sucesso.")
       })
@@ -349,6 +362,8 @@ export default function FormLayout({
           onChange={(value) => onFile("gallery", value)}
         />
 
+        {children}
+
         <div className="flex mt-10 items-center justify-between gap-4">
           {amount && (
             <div className="flex flex-col gap-0.5">
@@ -360,17 +375,23 @@ export default function FormLayout({
           )}
 
           <div className="flex ml-auto items-center gap-4">
-            <Button
-              type="button"
-              onClick={calculate}
-              variant="secondary"
-              disabled={loading === "CALCULATE"}
-            >
-              {loading === "CALCULATE" ? "Calculando ..." : "Calcular"}
-            </Button>
+            {hasCalculate && (
+              <Button
+                type="button"
+                onClick={calculate}
+                variant="secondary"
+                disabled={loading === "CALCULATE"}
+              >
+                {loading === "CALCULATE" ? "Calculando ..." : "Calcular"}
+              </Button>
+            )}
 
             <Button type="submit" disabled={loading === "SUBMIT"}>
-              {loading === "SUBMIT" ? "Enviando ..." : "Enviar informações"}
+              {loading === "SUBMIT"
+                ? "Enviando ..."
+                : isEditable
+                ? "Editar informações"
+                : "Enviar informações"}
             </Button>
           </div>
         </div>
