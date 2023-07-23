@@ -51,6 +51,7 @@
       'meta_input' => array(
         'body' => $params['body'],
         'city' => $params['city'],
+        'name' => $params['name'],
         'total' => estimate($params),
         'state' => $params['state'],
         'email' => $params['email'],

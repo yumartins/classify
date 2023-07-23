@@ -29,14 +29,8 @@ type FormFile = {
   path: string
 }
 
-type Files = {
-  logo: FormFile | null
-  gallery: FormFile[]
-}
-
 export default function App() {
   const [form, setForm] = useState(initialFields)
-  const [files, setFiles] = useState<Files | null>(null)
   const [amount, setAmount] = useState<string | null>(null)
 
   const methods = useForm<FormSchemaType>({
@@ -53,26 +47,16 @@ export default function App() {
       const logo = parse.find(({ name }) => name.includes("logo-"))
       const gallery = parse.filter(({ name }) => !name.includes("logo-"))
 
-      setFiles({
-        logo: logo || null,
-        gallery,
-      })
+      // setFiles({
+      //   logo: logo || null,
+      //   gallery,
+      // })
     }
 
     if (session) {
       const parse = JSON.parse(session) as Record<string, string>
 
-      const {
-        city,
-        state,
-        email,
-        phone,
-        street,
-        number,
-        category,
-        neighborhood,
-        ...rest
-      } = parse
+      const { city, state, street, number, neighborhood, ...rest } = parse
 
       Object.entries(rest).forEach(([key, value]) => {
         const formatter = () => {

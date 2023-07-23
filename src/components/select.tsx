@@ -26,7 +26,7 @@ export default function Select({ name, label, options, ...rest }: SelectProps) {
         {...rest}
         {...register(name)}
         name={name}
-        className="w-full px-4 py-2 text-gray-800 bg-white border border-gray-200 appearance-none outline-none rounded-lg placeholder:text-gray-400 text-sm transition-all duration-300 ease-in-out hover:border-gray-300"
+        className="w-full !px-4 !py-2 !text-gray-800 bg-white border !border-gray-200 appearance-none !outline-none !rounded-lg !placeholder:text-gray-400 !text-sm transition-all duration-300 ease-in-out hover:!border-gray-300"
         defaultValue={defaultValues?.[name]}
       >
         {options.map((option) => (

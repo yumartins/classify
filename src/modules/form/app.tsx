@@ -32,7 +32,7 @@ export default function App() {
     <div className="classify flex flex-col bg-white p-8 rounded-lg border border-solid border-gray-200">
       <span className="text-xs text-gray-400 uppercase">Classificados</span>
       <h2 className="!text-2xl text-gray-800 !font-semibold">Anuncie agora</h2>
-      <p className="text-sm !mt-1 text-gray-500">
+      <p className="text-sm !mt-1 !mb-6 text-gray-500">
         Calcule agora mesmo, é rápido e fácil.
       </p>
 

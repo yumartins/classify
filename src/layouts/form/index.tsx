@@ -1,6 +1,4 @@
-import "@/styles/main.scss"
-
-import { Dispatch, SetStateAction, useMemo, useState } from "react"
+import { useMemo, useState, type Dispatch, type SetStateAction } from "react"
 import { Button, Input, Select, Tabs, Textarea, Upload } from "@/components"
 import {
   fontType,
@@ -12,7 +10,7 @@ import { api } from "@/services"
 import { masks, parseDMY } from "@/utils"
 import { FormProvider, type UseFormReturn } from "react-hook-form"
 import toast from "react-hot-toast"
-import { type ImageListType, type ImageType } from "react-images-uploading"
+import type { ImageListType, ImageType } from "react-images-uploading"
 import { z } from "zod"
 
 import { categories } from "./data"
@@ -48,7 +46,7 @@ interface FormProps {
   setAmount: Dispatch<SetStateAction<string | null>>
 }
 
-export default function App({
+export default function FormLayout({
   form,
   amount,
   setForm,
@@ -180,7 +178,7 @@ export default function App({
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="flex flex-col mt-6 gap-4"
+        className="flex flex-col gap-4"
       >
         <Input
           name="name"
