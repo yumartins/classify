@@ -24,14 +24,14 @@ const prayer = z.object({
 })
 
 const printed = z.object({
+  bold: z.string().optional(),
+  regular: z.string().optional(),
   cursive: z.string().optional(),
   logo2cm: z.string().optional(),
   logo4cm: z.string().optional(),
   valuePerDay: z.string().optional(),
   valuePerLine: z.string().optional(),
   valuePerImage: z.string().optional(),
-  boldLetterInTitle: z.string().optional(),
-  regularLetterInTheBody: z.string().optional(),
 })
 
 const schema = z.object({

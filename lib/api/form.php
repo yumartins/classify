@@ -33,6 +33,8 @@
   }
 
   function save_form(WP_REST_Request $request) {
+    require_once 'estimate.php';
+
     $params = json_decode($request->get_body(), true);
 
     $address = array(
@@ -49,6 +51,7 @@
       'meta_input' => array(
         'body' => $params['body'],
         'city' => $params['city'],
+        'total' => estimate($params),
         'state' => $params['state'],
         'email' => $params['email'],
         'phone' => $params['phone'],
@@ -64,6 +67,8 @@
         'subscriber' => $params['subscriber'],
         'neighborhood' => $params['neighborhood'],
         'numberOfColumns' => $params['numberOfColumns'],
+        'numberOfLinesBody' => $params['numberOfLinesBody'],
+        'numberOfLinesTitle' => $params['numberOfLinesTitle'],
       ),
     ));
 

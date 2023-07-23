@@ -1,8 +1,14 @@
 <?php 
   function calculate(WP_REST_Request $request) {
+    require_once 'estimate.php';
+
     $params = json_decode($request->get_body(), true);
 
-    return wp_send_json($params);
+    $amount = estimate($params);
+
+    return wp_send_json(array(
+      'amount' => $amount,
+    ));
   }
 
   add_action('rest_api_init', function() {
