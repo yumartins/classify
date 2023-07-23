@@ -9,6 +9,11 @@ export const logoType = {
   "Logo de 4cm": "logo4cm",
 }
 
+export const origemType = {
+  Balcão: "balcony",
+  Telefone: "phone",
+}
+
 export const numberOfColumns = {
   "1 coluna": "one",
   "2 colunas": "two",

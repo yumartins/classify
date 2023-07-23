@@ -46,73 +46,77 @@ export default function App() {
     resolver: zodResolver(formSchema),
   })
 
+  const action = params.get("action")
+
   useEffect(() => {
-    const media = window.sessionStorage.getItem("classify-media")
-    const session = window.sessionStorage.getItem("classify-form")
+    if (action === "edit") {
+      const media = window.sessionStorage.getItem("classify-media")
+      const session = window.sessionStorage.getItem("classify-form")
 
-    if (media) {
-      const parse = JSON.parse(media) as FormFile[]
+      if (media) {
+        const parse = JSON.parse(media) as FormFile[]
 
-      const logo = parse.find(({ name }) => name.includes("logo-"))
-      const gallery = parse.filter(({ name }) => !name.includes("logo-"))
+        const logo = parse.find(({ name }) => name.includes("logo-"))
+        const gallery = parse.filter(({ name }) => !name.includes("logo-"))
 
-      setFiles({
-        logo: logo || null,
-        gallery,
-      })
-    }
-
-    if (session) {
-      const parse = JSON.parse(session) as Record<string, string>
-
-      const {
-        city,
-        state,
-        street,
-        number,
-        bodyType,
-        logoType,
-        titleType,
-        subscriber,
-        neighborhood,
-        numberOfColumns,
-        ...rest
-      } = parse
-
-      const address = {
-        city,
-        state,
-        street,
-        number,
-        neighborhood,
+        setFiles({
+          logo: logo || null,
+          gallery,
+        })
       }
 
-      setForm((prev) => ({
-        ...prev,
-        logoType: reverseObject(data.logoType)[logoType],
-        bodyType: reverseObject(data.fontType)[bodyType],
-        titleType: reverseObject(data.fontType)[titleType],
-        subscriber: subscriber === "1" ? "Sim" : "Não",
-        numberOfColumns: reverseObject(data.numberOfColumns)[numberOfColumns],
-      }))
+      if (session) {
+        const parse = JSON.parse(session) as Record<string, string>
 
-      methods.setValue("address", address)
+        const {
+          city,
+          state,
+          street,
+          number,
+          bodyType,
+          logoType,
+          titleType,
+          subscriber,
+          neighborhood,
+          numberOfColumns,
+          ...rest
+        } = parse
 
-      Object.entries(rest).forEach(([key, value]) => {
-        const formatter = () => {
-          if (["total", "totalWithDiscount"].includes(key))
-            return masks.money(value)
-
-          if (["endAt", "startAt"].includes(key))
-            return format(new Date(value), "dd/MM/yyyy")
-
-          return value
+        const address = {
+          city,
+          state,
+          street,
+          number,
+          neighborhood,
         }
 
-        methods.setValue(key as keyof FormSchemaType, formatter())
-      })
+        setForm((prev) => ({
+          ...prev,
+          logoType: reverseObject(data.logoType)[logoType],
+          bodyType: reverseObject(data.fontType)[bodyType],
+          titleType: reverseObject(data.fontType)[titleType],
+          subscriber: subscriber === "1" ? "Sim" : "Não",
+          numberOfColumns: reverseObject(data.numberOfColumns)[numberOfColumns],
+        }))
+
+        methods.setValue("address", address)
+
+        Object.entries(rest).forEach(([key, value]) => {
+          const formatter = () => {
+            if (["total", "totalWithDiscount"].includes(key))
+              return masks.money(value)
+
+            if (["endAt", "startAt"].includes(key))
+              return format(new Date(value), "dd/MM/yyyy")
+
+            return value
+          }
+
+          methods.setValue(key as keyof FormSchemaType, formatter())
+        })
+      }
     }
-  }, [methods])
+  }, [action, methods])
 
   const total = methods.watch("total")
   const discount = methods.watch("discount")
@@ -133,8 +137,6 @@ export default function App() {
     }
   }, [total, methods, discount])
 
-  const action = params.get("action")
-
   return (
     <div className="classify mt-4 flex flex-col gap-4">
       <FormLayout
@@ -143,6 +145,7 @@ export default function App() {
         methods={methods}
         setForm={setForm}
         setAmount={setAmount}
+        hasOrigem={!action}
         isEditable={action === "edit"}
       >
         <div className="flex items-center gap-4">

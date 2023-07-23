@@ -7,14 +7,20 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   options: string[]
 }
 
-export default function Select({ name, label, options, ...rest }: SelectProps) {
+export default function Select({
+  name,
+  label,
+  options,
+  className,
+  ...rest
+}: SelectProps) {
   const {
     register,
     formState: { defaultValues },
   } = useFormContext()
 
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className={`flex flex-col gap-0.5 ${className || ""}`}>
       <label
         htmlFor={name}
         className="text-xs cursor-default font-medium text-gray-600"

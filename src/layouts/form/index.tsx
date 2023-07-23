@@ -11,6 +11,7 @@ import {
   logoType,
   numberOfCaracteresByFontType,
   numberOfColumns,
+  origemType,
 } from "@/modules/data"
 import { api } from "@/services"
 import { masks, parseDMY } from "@/utils"
@@ -51,6 +52,7 @@ interface FormProps extends PropsWithChildren {
   setForm: Dispatch<SetStateAction<Form>>
   setAmount: Dispatch<SetStateAction<string | null>>
   clearForm?: boolean
+  hasOrigem?: boolean
   isEditable?: boolean
   hasCalculate?: boolean
 }
@@ -63,6 +65,7 @@ export default function FormLayout({
   children,
   clearForm,
   setAmount,
+  hasOrigem,
   isEditable,
   hasCalculate,
 }: FormProps) {
@@ -114,6 +117,9 @@ export default function FormLayout({
       logoType: logoType[form.logoType as keyof typeof logoType],
       titleType: fontType[form.title as keyof typeof fontType],
       subscriber: form.subscriber === "Sim",
+      calculationType: hasOrigem
+        ? origemType[rest.calculationType as keyof typeof origemType]
+        : undefined,
       numberOfColumns:
         numberOfColumns[form.numberOfColumns as keyof typeof numberOfColumns],
       numberOfLinesBody: numberOfLines.body,
@@ -193,6 +199,14 @@ export default function FormLayout({
         onSubmit={methods.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
+        <Select
+          name="calculationType"
+          label="Origem"
+          options={["Balcão", "Telefone"]}
+          className={!hasOrigem ? "hidden" : ""}
+          placeholder="Selecione a origem"
+        />
+
         <Input
           name="name"
           label="Nome completo"

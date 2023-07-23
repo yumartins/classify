@@ -11,7 +11,7 @@ import { z } from "zod"
 
 import { fields } from "./data"
 
-const tabs = ["Balcão", "Telefone", "Oração"]
+const tabs = ["Balcão", "Telefone"]
 
 const prayer = z.object({
   logo2cm: z.string().optional(),

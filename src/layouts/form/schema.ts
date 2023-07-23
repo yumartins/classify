@@ -26,5 +26,6 @@ export default z.object({
   startAt: z.string().nonempty("Digite a data de início do anúncio"),
   category: z.string().nonempty("Selecione a categoria do anúncio"),
   discount: z.string().optional(),
+  calculationType: z.string().optional(),
   totalWithDiscount: z.string().optional(),
 })
