@@ -1,12 +1,14 @@
 import { z } from "zod"
 
-const address = z.object({
-  city: z.string().optional(),
-  state: z.string().toUpperCase().optional(),
-  street: z.string().optional(),
-  number: z.string().optional(),
-  neighborhood: z.string().optional(),
-})
+const address = z
+  .object({
+    city: z.string().optional(),
+    state: z.string().toUpperCase().optional(),
+    street: z.string().optional(),
+    number: z.string().optional(),
+    neighborhood: z.string().optional(),
+  })
+  .optional()
 
 export default z.object({
   name: z.string().nonempty("Digite seu nome completo"),

@@ -18,16 +18,20 @@ export default function Input({
 }: InputProps) {
   const {
     register,
-    formState: { defaultValues },
+    formState: { errors, defaultValues },
   } = useFormContext()
 
   return (
     <div className={`flex flex-col gap-0.5 w-full ${className || ""}`}>
       <label
         htmlFor={name}
-        className="text-xs cursor-default font-medium text-gray-600"
+        className="text-xs cursor-default flex items-center justify-between font-medium text-gray-600"
       >
         {label}
+
+        {errors[name] && (
+          <p className="text-red-500">{errors[name]?.message as string}</p>
+        )}
       </label>
 
       <input

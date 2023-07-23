@@ -32,45 +32,46 @@
     return $attachment;
   }
 
+  function format_form($params) {
+    $data = array(
+      'body' => $params['body'],
+      'city' => $params['city'],
+      'name' => $params['name'],
+      'total' => estimate($params),
+      'state' => $params['state'],
+      'email' => $params['email'],
+      'phone' => $params['phone'],
+      'title' => $params['title'],
+      'endAt' => $params['endAt'],
+      'street' => $params['street'],
+      'number' => $params['number'],
+      'startAt' => $params['startAt'],
+      'discount' => $params['discount'],
+      'logoType' => $params['logoType'],
+      'category' => $params['category'],
+      'bodyType' => $params['bodyType'],
+      'titleType' => $params['titleType'],
+      'subscriber' => $params['subscriber'],
+      'neighborhood' => $params['neighborhood'],
+      'calculationType' => $params['calculationType'],
+      'numberOfColumns' => $params['numberOfColumns'],
+      'totalWithDiscount' => $params['totalWithDiscount'],
+      'numberOfLinesBody' => $params['numberOfLinesBody'],
+      'numberOfLinesTitle' => $params['numberOfLinesTitle'],
+    );
+
+    return $data;
+  }
+
   function save_form(WP_REST_Request $request) {
     require_once 'estimate.php';
 
     $params = json_decode($request->get_body(), true);
 
-    $address = array(
-      'city' => $params['address']['city'],
-      'state' => $params['address']['state'],
-      'street' => $params['address']['street'],
-      'number' => $params['address']['number'],
-      'neighborhood' => $params['address']['neighborhood'],
-    );
-
     $data = wp_insert_post(array(
       'post_type' => 'classify',
       'post_title' => $params['name'],
-      'meta_input' => array(
-        'body' => $params['body'],
-        'city' => $params['city'],
-        'name' => $params['name'],
-        'total' => estimate($params),
-        'state' => $params['state'],
-        'email' => $params['email'],
-        'phone' => $params['phone'],
-        'title' => $params['title'],
-        'endAt' => $params['endAt'],
-        'street' => $params['street'],
-        'number' => $params['number'],
-        'startAt' => $params['startAt'],
-        'logoType' => $params['logoType'],
-        'category' => $params['category'],
-        'bodyType' => $params['bodyType'],
-        'titleType' => $params['titleType'],
-        'subscriber' => $params['subscriber'],
-        'neighborhood' => $params['neighborhood'],
-        'numberOfColumns' => $params['numberOfColumns'],
-        'numberOfLinesBody' => $params['numberOfLinesBody'],
-        'numberOfLinesTitle' => $params['numberOfLinesTitle'],
-      ),
+      'meta_input' => format_form($params),
     ));
 
     if ($data && !is_wp_error($data)) {
@@ -78,6 +79,20 @@
         'id' => $data,
       ));
     }
+  }
+
+  function update_form(WP_REST_Request $request) {
+    require_once 'estimate.php';
+
+    $params = json_decode($request->get_body(), true);
+
+    foreach(format_form($params) as $key => $value) {
+      update_post_meta($params['postId'], $key, $value);
+    }
+
+    return wp_send_json(array(
+      'data' => $params,
+    ));
   }
 
   function upload_files() {
@@ -129,6 +144,11 @@
     register_rest_route('classify', '/upload', array(
       'methods' => 'POST',
       'callback' => 'upload_files',
+    ));
+
+    register_rest_route('classify', '/edit-form', array(
+      'methods' => 'POST',
+      'callback' => 'update_form',
     ));
   });
 ?> 

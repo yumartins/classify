@@ -49,25 +49,27 @@ interface FormProps extends PropsWithChildren {
   form: Form
   amount: string | null
   methods: UseFormReturn<FormSchemaType>
+  editId?: string
   setForm: Dispatch<SetStateAction<Form>>
   setAmount: Dispatch<SetStateAction<string | null>>
   clearForm?: boolean
   hasOrigem?: boolean
-  isEditable?: boolean
   hasCalculate?: boolean
+  successCallback?: () => void
 }
 
 export default function FormLayout({
   form,
   amount,
+  editId,
   setForm,
   methods,
   children,
   clearForm,
   setAmount,
   hasOrigem,
-  isEditable,
   hasCalculate,
+  successCallback,
 }: FormProps) {
   const [loading, setLoading] = useState<"CALCULATE" | "SUBMIT" | null>(null)
 
@@ -111,6 +113,7 @@ export default function FormLayout({
       ...rest,
       ...address,
       endAt: parseDMY(rest.endAt),
+      postId: editId || undefined,
       hasLogo: form.logo.length === 1,
       startAt: parseDMY(rest.startAt),
       bodyType: fontType[form.body as keyof typeof fontType],
@@ -123,6 +126,10 @@ export default function FormLayout({
       numberOfColumns:
         numberOfColumns[form.numberOfColumns as keyof typeof numberOfColumns],
       numberOfLinesBody: numberOfLines.body,
+      totalWithDiscount:
+        editId && rest.totalWithDiscount
+          ? masks.clear(rest.totalWithDiscount)
+          : undefined,
       numberOfLinesTitle: numberOfLines.title,
       numberOfPhotosInTheGallery: form.gallery.length,
     }
@@ -152,7 +159,7 @@ export default function FormLayout({
     const fields = formatter(data)
 
     api
-      .post("/classify/form", fields)
+      .post(`/classify/${editId ? "edit-form" : "form"}`, fields)
       .then(async ({ data }) => {
         if (form.logo.length > 0 || form.gallery.length > 0) {
           const logo = form.logo.length > 0 ? form.logo[0].file : undefined
@@ -164,7 +171,7 @@ export default function FormLayout({
 
           const fields = new FormData()
 
-          fields.append("post_id", data.id)
+          fields.append("post_id", editId || data.id)
 
           if (logo) fields.append("logo", logo, `logo-${data.id}.png`)
 
@@ -186,6 +193,8 @@ export default function FormLayout({
 
           methods.reset()
         }
+
+        if (successCallback) successCallback()
 
         toast.success("Anúncio enviado com sucesso.")
       })
@@ -403,7 +412,7 @@ export default function FormLayout({
             <Button type="submit" disabled={loading === "SUBMIT"}>
               {loading === "SUBMIT"
                 ? "Enviando ..."
-                : isEditable
+                : editId
                 ? "Editar informações"
                 : "Enviar informações"}
             </Button>

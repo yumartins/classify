@@ -46,10 +46,10 @@ export default function App() {
     resolver: zodResolver(formSchema),
   })
 
-  const action = params.get("action")
+  const postId = params.get("post")
 
   useEffect(() => {
-    if (action === "edit") {
+    if (postId) {
       const media = window.sessionStorage.getItem("classify-media")
       const session = window.sessionStorage.getItem("classify-form")
 
@@ -103,7 +103,10 @@ export default function App() {
 
         Object.entries(rest).forEach(([key, value]) => {
           const formatter = () => {
-            if (["total", "totalWithDiscount"].includes(key))
+            if (key === "calculationType")
+              return reverseObject(data.origemType)[value] || "Balcão"
+
+            if (value && ["total", "totalWithDiscount"].includes(key))
               return masks.money(value)
 
             if (["endAt", "startAt"].includes(key))
@@ -116,7 +119,7 @@ export default function App() {
         })
       }
     }
-  }, [action, methods])
+  }, [postId, methods])
 
   const total = methods.watch("total")
   const discount = methods.watch("discount")
@@ -142,11 +145,12 @@ export default function App() {
       <FormLayout
         form={form}
         amount={amount}
+        editId={postId || undefined}
         methods={methods}
         setForm={setForm}
         setAmount={setAmount}
-        hasOrigem={!action}
-        isEditable={action === "edit"}
+        hasOrigem={!!postId}
+        successCallback={() => window.location.reload()}
       >
         <div className="flex items-center gap-4">
           <Input
